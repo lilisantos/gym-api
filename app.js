@@ -4,12 +4,20 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors');
+// const bodyParser = require('body-parser');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
 var testAPIRouter = require('./routes/testAPI');
 
+// Controller Routes
+var personalRouter = require('./routes/personal');
+
 var app = express();
+
+//specify address and port the app will run
+const hostname = '0.0.0.0';
+const port = process.env.PORT || 8000;
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
@@ -25,6 +33,16 @@ app.use(express.static(path.join(__dirname, 'public')));
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/testAPI', testAPIRouter);
+app.use('/personal', personalRouter);
+
+// app.use(bodyParser.json());
+
+app.get("/", (req, res) => {
+  res.json({
+      gym: "app",
+  });
+});
+
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {
@@ -40,6 +58,13 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
+});
+
+/**
+ * Listen on provided port, on all network interfaces.
+ */
+app.listen(port, hostname, () => {
+  console.log(`Server running at http://${hostname}:${port}/`);    
 });
 
 module.exports = app;
