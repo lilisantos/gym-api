@@ -12,6 +12,11 @@ var testAPIRouter = require('./routes/testAPI');
 
 // Controller Routes
 var personalRouter = require('./routes/personal');
+var memberRouter = require('./routes/member');
+var bookingsRouter = require('./routes/bookings');
+var member_progressRouter = require('./routes/member_progress');
+var member_dietRouter = require('./routes/member_diet');
+var slotsRouter = require('./routes/slots');
 
 var app = express();
 
@@ -34,6 +39,11 @@ app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/testAPI', testAPIRouter);
 app.use('/personal', personalRouter);
+app.use('/member', memberRouter);
+app.use('/bookings', bookingsRouter);
+app.use('/member_progress', member_progressRouter);
+app.use('/member_diet', member_dietRouter);
+app.use('/slots', slotsRouter);
 
 // app.use(bodyParser.json());
 
