@@ -1,10 +1,10 @@
 var createError = require('http-errors');
 var express = require('express');
+var app = express();
 var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors');
-// const bodyParser = require('body-parser');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
@@ -17,8 +17,15 @@ var bookingsRouter = require('./routes/bookings');
 var member_progressRouter = require('./routes/member_progress');
 var member_dietRouter = require('./routes/member_diet');
 var slotsRouter = require('./routes/slots');
+var usersRouter = require('./routes/users');
 
-var app = express();
+// Login middleware
+// const users = require('./controllers/users')();
+// const usersModel = require('./models/users')();
+//const items = require('./controllers/items')();
+const { login } = require('./src/middleware/token');
+const auth = require('./src/middleware/auth');
+
 
 //specify address and port the app will run
 const hostname = '0.0.0.0';
@@ -45,14 +52,15 @@ app.use('/member_progress', member_progressRouter);
 app.use('/member_diet', member_dietRouter);
 app.use('/slots', slotsRouter);
 
-// app.use(bodyParser.json());
-
 app.get("/", (req, res) => {
   res.json({
       gym: "app",
   });
 });
 
+//Path to login
+app.post('/login', login);
+app.use(auth);
 
 // catch 404 and forward to error handler
 app.use(function(req, res, next) {

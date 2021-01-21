@@ -17,15 +17,13 @@ module.exports = () => {
     const getByDate = async (req, res) => {
         const date = req.params.date;
 
-        console.log("date contr: " + req.params);
-
-        const {slot, error} = await slots.get(date);
+        const {slotsList, error} = await slots.aggregateDateOnly(date);
 
         if(error){
             console.log("=== getByDate:: slots Error");
             return res.status(500).json(error);
         }
-        res.json(slot);
+        res.json(slotsList);
     }
 
     const postController = async (req, res) => {   

@@ -1,4 +1,5 @@
 const { ObjectID } = require('mongodb');
+const slots = require('../controller/slots');
 
 const db = require('../../db')();
 const COLLECTION = "slots";
@@ -6,26 +7,23 @@ const COLLECTION = "slots";
 module.exports = () => { 
     
     const get = async (date = null) => {
-        console.log(' inside slots model');
-       
-        if(!date){
-          try{
-            const slots = await db.get(COLLECTION);
-            return {slotsList: slots};
-          }catch(ex){
-            return {error: ex}
-          }           
-        }
-        console.log("date: " + date); 
-
-     
+      console.log(' inside bookings model');
+      if(!date){
         try{
-          const slot = await db.get(COLLECTION, {date});
-          return {slot};   
+          const slots = await db.get(COLLECTION);
+          return {slotsList: slots};
         }catch(ex){
           return {error: ex}
-        }
-             
+        }           
+      }
+
+      try{
+        const slots = await db.get(COLLECTION, {date});
+        return {slotsList: slots};   
+      }catch(ex){
+        return {error: ex}
+      }
+           
     }
 
     const add = async(date, personal_id) => {
@@ -64,36 +62,43 @@ module.exports = () => {
        
     };
 
-    // const aggregateWithIssues = async(slug) => {       
-    //     //Pipeline that searches for the project with the slug provided
-    //     const LOOKUP_ISSUES_PIPELINE = [
-    //         {
-    //             $match: {
-    //                 "slug": slug,
-    //             }
-    //         },
-    //         {
-    //             $lookup: {
-    //                 from: "issues",
-    //                 localField: "_id",
-    //                 foreignField: "project",
-    //                 as: "issues",
-    //             }
-    //         },
-    //     ];
+    const aggregateDateOnly = async(date) => {       
+       
+      // Pipeline to filter the date without the time, 
+      // what is passed to the next stage and matches only the slots
+      // that are available and on the day selected by the user 
+        const PIPELINE_SLOTS_DATEONLY = [
+          {
+            $project: {
+               dateOnly: { $dateToString: { format: "%Y-%m-%d", date: "$date" } },
+               'status': true,
+               'personal': true,
+               'date': true
+            }
+          },
+          {
+             $match: 
+                 { 
+                    $and:[       
+                        {dateOnly: date},
+                        {'status': 'available'}
+                    ]                 
+                 }
+          }       
+        ];
 
-    //     try {
-    //       const projects = await db.aggregate(COLLECTION, LOOKUP_ISSUES_PIPELINE);
-    //       return projects;
-    //     }catch(ex){
-    //       return {error: ex}
-    //     }        
-    // }
+        try {
+          const slots = await db.aggregate(COLLECTION, PIPELINE_SLOTS_DATEONLY);
+          return {slotsList: slots};
+        }catch(ex){
+          return {error: ex}
+        }        
+    }
 
     return {
         get,
         add,
         update,
-        // aggregateWithIssues,
+        aggregateDateOnly,
     }
 };

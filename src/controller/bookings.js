@@ -1,5 +1,3 @@
-const db = require('../../db.js');
-
 const bookings = require('../model/bookings.js')();
 
 module.exports = () => {
