@@ -6,9 +6,10 @@ module.exports = (req, res, next) => {
     let accessToken = req.header.jwt;
 
     if (!accessToken) {
-      return res.status(403).send({ error: 'Invalid Token' });
+      error = 'Invalid token!';
+      return res.status(403).json({ error: error });
     }
-
+    
     const RANDOM_TOKEN = token.RANDOM_TOKEN;
     const decodedToken = jwt.verify(accessToken, RANDOM_TOKEN);
 

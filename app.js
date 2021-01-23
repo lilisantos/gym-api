@@ -8,7 +8,6 @@ var cors = require('cors');
 
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-var testAPIRouter = require('./routes/testAPI');
 
 // Controller Routes
 var personalRouter = require('./routes/personal');
@@ -22,7 +21,6 @@ var usersRouter = require('./routes/users');
 // Login middleware
 // const users = require('./controllers/users')();
 // const usersModel = require('./models/users')();
-//const items = require('./controllers/items')();
 const { login } = require('./src/middleware/token');
 const auth = require('./src/middleware/auth');
 
@@ -44,7 +42,6 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-app.use('/testAPI', testAPIRouter);
 app.use('/personal', personalRouter);
 app.use('/member', memberRouter);
 app.use('/bookings', bookingsRouter);
@@ -62,9 +59,25 @@ app.get("/", (req, res) => {
 app.post('/login', login);
 app.use(auth);
 
-// catch 404 and forward to error handler
-app.use(function(req, res, next) {
-  next(createError(404));
+app.use((req, res) => {
+  res.status(404).json({
+    error: 404,
+    message: 'Route not found',
+  });
+});
+
+app.use((req, res) => {
+  res.status(403).json({
+    error: 403,
+    message: 'Invalid credentials!',
+  });
+});
+
+app.use((req, res) => {
+  res.status(401).json({
+    error: 401,
+    message: 'Invalid credentials!',
+  });
 });
 
 // error handler
@@ -76,6 +89,7 @@ app.use(function(err, req, res, next) {
   // render the error page
   res.status(err.status || 500);
   res.render('error');
+
 });
 
 /**

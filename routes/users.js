@@ -8,8 +8,8 @@ router.get("/", function(req, res, next){
 });
 
 /* GET users listing. */
-router.get('/users', usersController.getAll); // get all users
-router.get('/users/:email', usersController.getOne); //get individual user
-router.post('/users', usersController.addOne);
+router.get('/get', usersController.getAll); // get all users
+router.get('/:email', usersController.getOne); //get individual user
+router.post('/add', usersController.addOne);
 
 module.exports = router;
