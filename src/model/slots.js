@@ -1,30 +1,32 @@
 const { ObjectID } = require('mongodb');
-const slots = require('../controller/slots');
-
 const db = require('../../db')();
 const COLLECTION = "slots";
 
 module.exports = () => { 
-    
-    const get = async (date = null) => {
-      console.log(' inside bookings model');
-      if(!date){
-        try{
-          const slots = await db.get(COLLECTION);
-          return {slotsList: slots};
-        }catch(ex){
-          return {error: ex}
-        }           
-      }
 
+  const get = async (id = null) => {
+    console.log(' inside slots model');
+
+    if(!id){
       try{
-        const slots = await db.get(COLLECTION, {date});
-        return {slotsList: slots};   
+        const slots = await db.get(COLLECTION);
+        return {slotsList: slots};
       }catch(ex){
         return {error: ex}
-      }
-           
+      }           
     }
+
+    const objId = ObjectID(id);
+    console.log("obj: " + objId)
+
+    try{
+      const slot = await db.get(COLLECTION, {objId});
+      return {slot};   
+    }catch(ex){
+      console.log("=== getById:: Slots Error model");
+      return {error: ex}
+    }         
+  }  
 
     const add = async(date, personal_id) => {
       console.log(' inside slots model add');
@@ -59,11 +61,9 @@ module.exports = () => {
        }catch(ex){
         return {error: ex}
        }
-       
-    };
-
-    const aggregateDateOnly = async(date) => {       
-       
+    }  
+    
+    const aggregateDateOnly = async(date) => {             
       // Pipeline to filter the date without the time, 
       // what is passed to the next stage and matches only the slots
       // that are available and on the day selected by the user 
@@ -95,10 +95,33 @@ module.exports = () => {
         }        
     }
 
+    const aggregateSlotInfo = async(id) => {             
+      // Pipeline to get only the necessary info to add a new booking
+        const PIPELINE_SLOT_INFO = [
+          {
+            $project: {              
+               'date': true,
+               'personal': true,
+            }
+          },
+          {
+             $match: { '_id': ObjectID(id)}
+          }       
+        ];
+
+        try {
+          const slot = await db.aggregate(COLLECTION, PIPELINE_SLOT_INFO);
+          return {slot};
+        }catch(ex){
+          return {error: ex}
+        }        
+    }
+
     return {
         get,
         add,
         update,
         aggregateDateOnly,
+        aggregateSlotInfo,
     }
 };

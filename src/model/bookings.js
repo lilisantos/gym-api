@@ -2,6 +2,8 @@ const { ObjectID } = require('mongodb');
 
 const db = require('../../db')();
 const COLLECTION = "bookings";
+//Require slots model
+const slots = require('./slots.js')();
 
 module.exports = () => { 
     
@@ -40,42 +42,45 @@ module.exports = () => {
            
   }
 
-    const add = async(type, member_id, personal_id, date, fee, status) => {
-      console.log(' inside bookings model add');
+    const add = async(userEmail, slotId, slotPersonalId, slotDate) => {
+      console.log(' inside bookings model add');    
+      
+        //Checks if any of the fields is null
+        if (!userEmail || !slotPersonalId || !slotDate){       
+          console.log("===== Not all the fields have been provided:: add booking Error");   
+          return null;
+      }
+
+      //Get memberId
+        const memberId = await db.findMemberId(userEmail);
      
-      // const checkProject = await db.findProjectID(slug);
-      // try{
-      //     //if a project was found, return error message
-      //     if(checkProject != null){
-      //       console.log("===== Project already registered with this slug:: add ProjectModel Error");              
-      //       return null;
-           
-      //     }
-      // }catch(ex){       
+
+      //  //Get slot info (date, personalId and type)
+      //  try{
+      //   const slot = await slots.aggregateSlotInfo(slotId);
+      //   console.log("slot: " + slot);
+      //   const dateSlot = slot.date;
+      //   const personalId = slot.personal;
+
+      //   // console.log("date: " + dateSlot + "  - personal: " + personalId);
+      // }catch(ex){
+      //   console.log("deu ruim getslotinfo: " + ex);
       //     return {error: ex}
       // }
 
-      // try{
-      //   //Checks if any of the fields is null
-      //   if (!id || !name){       
-      //       console.log("===== Not all the fields have been provided:: add PersonalModel Error");   
-      //       return null;
-      //   }
-      // }catch(ex){       
-      //     return {error: ex}
-      // }       
- 
+      
       try{
         const results = await db.add(COLLECTION, {
-            type: type,
-            member:  ObjectID(member_id),
-            personal: ObjectID(personal_id),
-            date: ISODate(date),
-            fee: fee,
-            status: status
+            type: "workout",
+            member:  memberId,
+            personal: slotPersonalId,
+            date: slotDate,
+            fee: "due",
+            status: "booked"
          });
          return results.result;
       }catch(ex){
+        console.log("deu ruim save booking" + ex);
           return {error: ex}
       }
     };

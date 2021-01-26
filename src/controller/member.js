@@ -1,11 +1,11 @@
 const db = require('../../db.js');
 
-const member = require('../model/member.js')();
+const members = require('../model/member.js')();
 
 module.exports = () => {
 
     const getController = async (req, res) => {
-        const {memberList, error} = await member.get();
+        const {memberList, error} = await members.get();
         if(error){
             console.log("=== get:: Member Error");
             return res.status(500).json(error);
@@ -15,11 +15,23 @@ module.exports = () => {
     }
 
     const getById = async (req, res) => {
-        const {member, error} = await member.get(req.params.id);
+        const {member, error} = await members.get(req.params.id);
         if(error){
             console.log("=== getById:: Member Error");
             return res.status(500).json(error);
         }
+        res.json(member);
+    }
+
+    const getByEmail = async (req, res) => {
+        const {email} = req.body;
+
+        const {member, error} = await members.get(email);
+        if(error){
+            return res.status(500).json({error});
+        }
+
+        console.log("member: " + member);
         res.json(member);
     }
 
@@ -32,7 +44,7 @@ module.exports = () => {
         dob = dateFormat(date_birth, "dd:mm:yyyy");
         console.log("dob = " + dob);
 
-        const {results, error} = await member.add(name, email, dob, goal_weight, personal_id);
+        const {results, error} = await members.add(name, email, dob, goal_weight, personal_id);
         if(error){       
             console.log("=== post:: Member Error", error);    
             return res.status(500).json(error);
@@ -56,6 +68,7 @@ module.exports = () => {
         getController,
         postController,
         getById,
+        getByEmail
         // populatedController,
     };
 }

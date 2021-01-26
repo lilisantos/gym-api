@@ -1,4 +1,6 @@
 const bookings = require('../model/bookings.js')();
+const slots = require('../model/slots.js')();
+const members = require('../model/member.js')();
 
 module.exports = () => {
 
@@ -31,15 +33,27 @@ module.exports = () => {
     }
 
     const postController = async (req, res) => {   
-        const {type, member_id, personal_id, booking_date, fee, status} = req.body;
+        // const {type, member_id, personal_id, booking_date, fee, status} = req.body;
+        const {slotId, userEmail, slotPersonalId, slotDate} = req.body;
+        // const {slotPersonalId} = req.body.slotPersonalId;
+        console.log("== API - personal: " + slotPersonalId
+        + "  - slotDate: " + slotDate + "  - userEmail: " + userEmail);
 
-        var dateFormat = require("dateformat");
-        var isodate = new Date().toISOString();
+        // const {slot, err} = await slots.aggregateSlotInfo(slotId);
+        // if(err){
+        //     console.log("=== getById:: slots Error");
+        //     return res.status(500).json(err);
+        // }
+        // console.log("slot: " + slot);
+        // const {member_id, }
         
-        isodate = dateFormat(booking_date, "isoDateTime");
-        console.log("date = " + date);
 
-        const {results, error} = await bookings.add(id, type, member_id, personal_id, date, fee, status);
+        // var dateFormat = require("dateformat");
+        // var isodate = new Date().toISOString();        
+        // isodate = dateFormat(booking_date, "isoDateTime");
+        // console.log("date = " + date);
+
+        const {results, error} = await bookings.add(userEmail, slotId,  slotPersonalId, slotDate);
         if(error){           
             return res.status(500).json(error);
         }
@@ -50,7 +64,7 @@ module.exports = () => {
     const cancelBooking = async (req, res) => {
         const bookingId = req.params.booking_id;
 
-        const new_status = "cancelled";
+        const Nnew_status = "cancelled";
 
         //Calls the add method on the issues model
         const {result, error} = await bookings.cancelBooking(bookingId, new_status);

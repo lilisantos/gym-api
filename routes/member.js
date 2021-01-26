@@ -9,5 +9,7 @@ router.get("/", function(req, res, next){
 
 router.get('/get', memberController.getController);
 router.post('/add', memberController.postController);
+//Get member id by email
+router.get('/getByEmail', memberController.getByEmail);
 
 module.exports = router;

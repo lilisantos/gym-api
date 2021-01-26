@@ -5,9 +5,9 @@ const COLLECTION = "member";
 
 module.exports = () => { 
     
-    const get = async (id = null) => {
+    const get = async (email = null) => {
         console.log(' inside member model');
-        if(!id){
+        if(!email){
           try{
             const members = await db.get(COLLECTION);
             return {memberList: members};
@@ -15,31 +15,18 @@ module.exports = () => {
             return {error: ex}
           }           
         }
-
         try{
-          const members = await db.get(COLLECTION, {id});
-          return {memberList: members};   
+          const member = await db.get(COLLECTION, {email});
+          console.log("member model: " + member);
+          return {member};   
         }catch(ex){
           return {error: ex}
         }
              
     }
 
-    const add = async(name, email, dob, goal_weight, personal_id) => {
+    const add = async(add, email, dob, goal_weight, personal_id) => {
       console.log(' inside member model add');
-    
-     
-      // const checkProject = await db.findProjectID(slug);
-      // try{
-      //     //if a project was found, return error message
-      //     if(checkProject != null){
-      //       console.log("===== Project already registered with this slug:: add ProjectModel Error");              
-      //       return null;
-           
-      //     }
-      // }catch(ex){       
-      //     return {error: ex}
-      // }
 
       // try{
       //   //Checks if any of the fields is null

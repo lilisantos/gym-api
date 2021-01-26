@@ -121,6 +121,35 @@ module.exports = () => {
             });
         });
     };
+
+    const findMemberId = (email) => {
+        return new Promise((resolve, reject) => {
+            MongoClient.connect(uri, MONGO_OPTIONS, (err, client) => {
+                if(err){
+                    console.log("==== findMemberId:: MongoCLient.connect");
+                    console.log(err);
+                    return reject(err);
+                }
+                const db = client.db(DB_NAME);
+                const collection = db.collection("member");
+
+                collection.findOne({"email": email}, (err, docs) => {
+                    if(err){
+                        console.log("==== findMemberId:: MongoCLient.find");
+                        console.log(err);
+                        return reject(err);
+                    }
+                    if(docs == null){
+                        resolve(null);
+                        client.close();
+                    }else{
+                        resolve(docs._id);
+                        client.close();
+                    }                   
+                });
+            });
+        });
+    }
     
 
     return {
@@ -128,6 +157,7 @@ module.exports = () => {
         count,
         add,
         update,
-        aggregate
+        aggregate,
+        findMemberId
     };
 };

@@ -1,5 +1,3 @@
-const db = require('../../db.js');
-
 const slots = require('../model/slots.js')();
 
 module.exports = () => {
@@ -13,6 +11,23 @@ module.exports = () => {
         
         res.json(slotsList);
     }
+
+    const getById = async (req, res) => {
+        try{
+            const {slot, error} = await slots.get(req.params.id);
+            return res.json(slot);
+        }catch(ex){
+            console.log("=== getById:: Slots Error");
+            return res.status(500).json({error: ex});
+        }
+    }
+       
+    //     if(error){
+    //         console.log("=== getById:: Slots Error");
+    //         return res.status(500).json(error);
+    //     }
+    //     res.json(slot);
+    // }
 
     const getByDate = async (req, res) => {
         const date = req.params.date;
@@ -71,6 +86,7 @@ module.exports = () => {
         getController,
         postController,
         getByDate,
+        getById,
         update,
         // populatedController,
     };
