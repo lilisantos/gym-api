@@ -38,7 +38,7 @@ const auth = require('./src/middleware/auth');
 
 //specify address and port the app will run
 const hostname = '0.0.0.0';
-const port = process.env.PORT || 8000;
+const port = process.env.PORT;
 
 // view engine setup
 app.set('views', path.join(__dirname, 'views'));
