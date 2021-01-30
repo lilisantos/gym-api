@@ -110,8 +110,8 @@ app.use(function(err, req, res, next) {
 /**
  * Listen on provided port, on all network interfaces.
  */
-app.listen(port, hostname, () => {
-  console.log(`Server running at http://${hostname}:${port}/`);    
-});
+// app.listen(port, hostname, () => {
+//   console.log(`Server running at http://${hostname}:${port}/`);    
+// });
 
 module.exports = app;
