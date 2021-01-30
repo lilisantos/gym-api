@@ -1,9 +1,9 @@
-const db = require('../../db.js');
-
+//Require model personal
 const personal = require('../model/personal.js')();
 
 module.exports = () => {
 
+    //Get personal trainers
     const getController = async (req, res) => {
         const {personalList, error} = await personal.get();
         if(error){
@@ -14,6 +14,7 @@ module.exports = () => {
         res.json(personalList);
     }
 
+    //Get personal trainers by id
     const getById = async (req, res) => {
         const {personal, error} = await personal.get(req.params.id);
         if(error){
@@ -23,6 +24,7 @@ module.exports = () => {
         res.json(personal);
     }
 
+    //Add new personal trainer
     const postController = async (req, res) => {   
         const {name, email, mobile} = req.body;
 
@@ -34,21 +36,9 @@ module.exports = () => {
         res.json(results);
     }
 
-    // const populatedController = async (req, res) => {
-    //     const {projectIssues, error} = await projects.aggregateWithIssues(req.params.slug);
-    //     if(error){
-    //         console.log("=== aggregate:: Projects Error");
-    //         return res.status(500).json(error);
-    //     }
-    //     res.json(projectIssues);
-    // };
-
-  
-   
     return {
         getController,
         postController,
         getById,
-        // populatedController,
     };
 }

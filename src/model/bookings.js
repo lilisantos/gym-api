@@ -7,6 +7,7 @@ const slots = require('./slots.js')();
 
 module.exports = () => { 
     
+    //Get bookings
     const get = async (id = null) => {
         console.log(' inside bookings model');
         if(!id){
@@ -27,10 +28,11 @@ module.exports = () => {
              
     }
 
+    //Gets next booking
     const getFirst = async () => {
      const PIPELINE_FIRST =  [
       {
-        $match: {"status": "booked"} //Gets only aactive bookings      
+        $match: {"status": "booked"} //Gets only active bookings      
       }];
 
       try{
@@ -42,6 +44,7 @@ module.exports = () => {
            
   }
 
+    //Add new booking
     const add = async(userEmail, slotId, slotPersonalId, slotDate) => {
       console.log(' inside bookings model add');    
       
@@ -75,21 +78,17 @@ module.exports = () => {
       }
     };
 
+    //Cancel booking
     const cancelBooking = async (bookingId, new_status) => {
         if(!bookingId){
             console.log("Booking id required to cancel");
             return null;
         }
 
-        console.log("BookingId:" + bookingId);
-        console.log("status:" + new_status);
-
         const PIPELINE = [
             { _id : ObjectID(bookingId)},
             { $set: { status: new_status }}
           ];
-
-          console.log("pipeline:" + PIPELINE);
 
        try{
             const results = await db.update(COLLECTION, PIPELINE);
@@ -103,6 +102,7 @@ module.exports = () => {
 
     return {
         get,
+        getFirst,
         add,
         cancelBooking,
     }

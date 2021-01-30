@@ -4,6 +4,7 @@ const COLLECTION = "slots";
 
 module.exports = () => { 
 
+  //Get slots
   const get = async (id = null) => {
     console.log(' inside slots model');
 
@@ -17,8 +18,6 @@ module.exports = () => {
     }
 
     const objId = ObjectID(id);
-    console.log("obj: " + objId)
-
     try{
       const slot = await db.get(COLLECTION, {objId});
       return {slot};   
@@ -28,6 +27,7 @@ module.exports = () => {
     }         
   }  
 
+    //Add slot
     const add = async(date, personal_id) => {
       console.log(' inside slots model add');
      
@@ -44,6 +44,7 @@ module.exports = () => {
       }
     };
 
+    //Update slot
     const update = async (slotId, new_status) => {
         if(!slotId){
             console.log("Slot id required to update");
@@ -66,8 +67,7 @@ module.exports = () => {
     const aggregateDateOnly = async(date) => {             
       // Pipeline to filter the date without the time, 
       // what is passed to the next stage and matches only the slots
-      // that are available and on the day selected by the user 
-      
+      // that are available and on the day selected by the user       
         const PIPELINE_SLOTS_DATEONLY = [
           {
             $project: {

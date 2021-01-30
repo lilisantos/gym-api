@@ -1,7 +1,9 @@
+//Require model slots
 const users = require('../model/users')();
 
 module.exports = () => {
 
+  //Get all users
   const getAll = async (req, res) => {
     const { user, error } = await users.get();
     if (error) {
@@ -9,6 +11,8 @@ module.exports = () => {
     }
     res.send(user);
   };
+
+  //Get individual user
   const getOne = async (req, res) => {
     const { user, error } = await users.get(req.params.email);
     if (error) {
@@ -17,6 +21,7 @@ module.exports = () => {
     res.send(user);
   };
 
+  //Add user
   const addOne = async (req, res) => {
     const { name, email, type, password } = req.body;
 
@@ -28,6 +33,7 @@ module.exports = () => {
     }
     res.send(results);
   };
+  
   return {
     getAll,
     getOne,

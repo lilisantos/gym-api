@@ -4,6 +4,7 @@ const bcrypt = require('bcrypt');
 const salt = bcrypt.genSaltSync(10);
 
 module.exports = () => {
+  //Get user
   const get = async (email) => {
     try {
       if (email == null) {
@@ -18,18 +19,15 @@ module.exports = () => {
       };
     }
   };
+
+  //Add user
   const add = async (name, type, email, password) => {
     if (!name || !type || !email || !password) {
       return { error: 'Please, provide all required fields' };
     }
 
     try {
-      const userAlreadyExists = await db.get(COLLECTION, { email });
-
-      if (userAlreadyExists.length > 0) {
-        return { error: 'User already exists' };
-      }
-
+     
       const key = bcrypt.hashSync(password, salt);
       const results = await db.add(COLLECTION, {
         name,

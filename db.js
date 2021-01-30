@@ -6,31 +6,6 @@ const MONGO_OPTIONS = { useUnifiedTopology: true , useNewUrlParser: true };
 
 module.exports = () => {
     
-    const count = (collectionName, query = {}) => {
-        return new Promise((resolve, reject) => {
-            MongoClient.connect(uri, MONGO_OPTIONS, (err, client) => {
-                if(err){
-                    console.log("=== count:: MongoClient.connect");
-                    console.log(err);
-                    return reject(err);
-                }
-
-                const db = client.db(DB_NAME);
-                const collection = db.collection(collectionName);
-
-                collection.countDocuments({query}, (err, docs) => {
-                    if(err){
-                        console.log("=== count:: MongoClient.count");
-                        console.log(err);
-                        return reject(err);
-                    }
-                    resolve(docs);
-                    client.close();
-                });
-            });
-        });
-    };  
-       
     const get = (collectionName, query = {}) => {
         return new Promise((resolve, reject) => {
             MongoClient.connect(uri, MONGO_OPTIONS, (err, client) => {
@@ -131,6 +106,7 @@ module.exports = () => {
         });
     };
 
+    //Return member id from provided email
     const findMemberId = (email) => {
         return new Promise((resolve, reject) => {
             MongoClient.connect(uri, MONGO_OPTIONS, (err, client) => {
@@ -163,7 +139,6 @@ module.exports = () => {
 
     return {
         get,
-        count,
         add,
         update,
         aggregate,

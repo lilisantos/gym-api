@@ -1,9 +1,9 @@
-const db = require('../../db.js');
-
+//Require model member_progress
 const member_progress = require('../model/member_progress.js')();
 
 module.exports = () => {
 
+    //Get progress
     const getController = async (req, res) => {
         const {member_progressList, error} = await member_progress.get();
         if(error){
@@ -14,6 +14,7 @@ module.exports = () => {
         res.json(member_progressList);
     }
 
+    //Get progress by id
     const getById = async (req, res) => {
         const {member_progress, error} = await member_progress.get(req.params.id);
         if(error){
@@ -23,14 +24,12 @@ module.exports = () => {
         res.json(member_progress);
     }
 
+    //Add new progress
     const postController = async (req, res) => {   
         const {member_id, weight, measures} = req.body;
 
-        var dateFormat = require("dateformat");
+        //Get current date
         var date = new Date();  
-        
-        // date = dateFormat(date_update, "dd:mm:yyyy");
-        console.log("date = " + date);
 
         const {results, error} = await member_progress.add(date, member_id, weight, measures);
         if(error){       
@@ -40,22 +39,10 @@ module.exports = () => {
 
         res.json(results);
     }
-
-    // const populatedController = async (req, res) => {
-    //     const {projectIssues, error} = await projects.aggregateWithIssues(req.params.slug);
-    //     if(error){
-    //         console.log("=== aggregate:: Projects Error");
-    //         return res.status(500).json(error);
-    //     }
-    //     res.json(projectIssues);
-    // };
-
-  
    
     return {
         getController,
         postController,
         getById,
-        // populatedController,
     };
 }

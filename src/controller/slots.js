@@ -1,7 +1,9 @@
+//Require model slots
 const slots = require('../model/slots.js')();
 
 module.exports = () => {
 
+    //Get slots
     const getController = async (req, res) => {
         const {slotsList, error} = await slots.get();
         if(error){
@@ -12,6 +14,7 @@ module.exports = () => {
         res.json(slotsList);
     }
 
+    //Get slots by id
     const getById = async (req, res) => {
         try{
             const {slot, error} = await slots.get(req.params.id);
@@ -22,6 +25,7 @@ module.exports = () => {
         }
     }
    
+    //Get slots by date
     const getByDate = async (req, res) => {
         const date = req.params.date;
 
@@ -38,8 +42,7 @@ module.exports = () => {
         const {slot_date, personal_id} = req.body;
 
         var dateFormat = require("dateformat");
-        // var date = new Date();  
-        
+        //Format date to isotime
         date = dateFormat(slot_date, "isoDateTime");
        
         const {results, error} = await slots.add(date, personal_id);
@@ -50,12 +53,13 @@ module.exports = () => {
         res.json(results);
     };
 
+    //Update slot status when it is booked
     const update = async (req, res) => {
         const slotId = req.params.slot_id;
 
         const new_status = "unavailable";
 
-        //Calls the add method on the issues model
+        //Calls the add method on the slots model
         const {result, error} = await slots.update(slotId, new_status);
         if(error){
             console.log("=== update Slot:: Slots Error", error);
@@ -64,23 +68,11 @@ module.exports = () => {
         res.json(result);
     };
 
-    // const populatedController = async (req, res) => {
-    //     const {projectIssues, error} = await projects.aggregateWithIssues(req.params.slug);
-    //     if(error){
-    //         console.log("=== aggregate:: Projects Error");
-    //         return res.status(500).json(error);
-    //     }
-    //     res.json(projectIssues);
-    // };
-
-  
-   
     return {
         getController,
         postController,
         getByDate,
         getById,
         update,
-        // populatedController,
     };
 }

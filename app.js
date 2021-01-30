@@ -10,7 +10,7 @@ const bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// Set up headers
+// Setup headers
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
   res.header("ccess-Control-Allow-Credentials", true);
@@ -19,10 +19,9 @@ app.use(function(req, res, next) {
   next();
 });
 
+// Setup Controller Routes
 var indexRouter = require('./routes/index');
 var usersRouter = require('./routes/users');
-
-// Controller Routes
 var personalRouter = require('./routes/personal');
 var memberRouter = require('./routes/member');
 var bookingsRouter = require('./routes/bookings');
@@ -33,11 +32,9 @@ var slotsRouter = require('./routes/slots');
 var usersRouter = require('./routes/users');
 var invoiceRouter = require('./routes/invoice');
 
-
-// Login middleware
+//Setup Login middleware
 const { login } = require('./src/middleware/token');
 const auth = require('./src/middleware/auth');
-
 
 //specify address and port the app will run
 const hostname = '0.0.0.0';
@@ -54,7 +51,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, 'public')));
 
-
+//Setup app routes
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
 app.use('/personal', personalRouter);
@@ -76,6 +73,7 @@ app.get("/", (req, res) => {
 app.post('/login', login);
 app.use(auth);
 
+//Handle error responses
 app.use((req, res) => {
   res.status(404).json({
     error: 404,

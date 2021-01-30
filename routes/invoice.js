@@ -9,7 +9,7 @@ router.get("/", function(req, res, next){
 
 router.get('/get', invoiceController.getController);
 //Get by id
-router.get('/getById', invoiceController.getById);
+router.get('/getById/:id', invoiceController.getById);
 //Get by member
 router.get('/getByMember/:userEmail', invoiceController.getByMember);
 router.post('/add', invoiceController.postController);

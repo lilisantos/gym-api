@@ -4,6 +4,7 @@ const COLLECTION = "invoice";
 
 module.exports = () => { 
     
+    //Get invoice
     const get = async (id = null) => {
         console.log(' inside invoice model');
         if(!id){
@@ -14,10 +15,11 @@ module.exports = () => {
             return {error: ex}
           }           
         }
-        console.log("id: " + id)
+        
+        //Get invoice by id
+        //This function is under construction due to problems with returning data
         try{
-          const inv = await db.get(COLLECTION, {id});
-          console.log("invoice model: " + inv)
+          const inv = await db.get(COLLECTION, {id});         
           return {inv};   
         }catch(ex){
           console.log("=====invoice error: " + ex)
@@ -26,9 +28,9 @@ module.exports = () => {
              
     }
 
+    //Add a new invoice
     const add = async(member_id, booking_id) => {
-      console.log(' inside invoice model add');
-     
+      console.log(' inside invoice model add');     
  
       try{
         const results = await db.add(COLLECTION, {
@@ -43,12 +45,11 @@ module.exports = () => {
       }
     }
     
+    //Returns invoices per member
     const invoicesPerMember = async(userEmail) => {             
-         //Get memberId
-         console.log("userEmail model: " + userEmail);
+      //Get memberId
       const member = await db.findMemberId(userEmail);
-      console.log("memberid: " + member);
-
+      
         // Pipeline to get only the necessary info to add a new booking
           const PIPELINE_INVOICE_MEMBER = [
             {
@@ -56,17 +57,9 @@ module.exports = () => {
                     'member': member
                 }
             },          
-             {
-                $lookup: {
-                    from: "bookings",
-                    localField: "booking",
-                    foreignField: "date",
-                    as: "booking_date",
-                },
-            },
+            
             {
                 $project: {
-                  //  dateOnly: { $dateToString: { format: "%Y-%m-%d", date: "$date" } },
                    'member': true,
                    'amount': true,
                    'booking': true,
@@ -77,10 +70,9 @@ module.exports = () => {
           ];  
           try {
             const invoices = await db.aggregate(COLLECTION, PIPELINE_INVOICE_MEMBER);
-            console.log("agg model: " + JSON.stringify(invoices));
             return {invoicesList: invoices};
           }catch(ex){
-              console.log("=== erro: " + ex)
+              console.log("=== error aggreagation -> Invoice: " + ex)
             return {error: ex}
           }        
       }

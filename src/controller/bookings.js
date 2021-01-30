@@ -1,9 +1,9 @@
+//Require model bookings
 const bookings = require('../model/bookings.js')();
-const slots = require('../model/slots.js')();
-const members = require('../model/member.js')();
 
 module.exports = () => {
 
+    //Get bookings
     const getController = async (req, res) => {
         const {bookingsList, error} = await bookings.get();
         if(error){
@@ -14,6 +14,7 @@ module.exports = () => {
         res.json(bookingsList);
     }
 
+    //Get booking by id
     const getById = async (req, res) => {
         const {booking, error} = await bookings.get(req.params.id);
         if(error){
@@ -23,6 +24,7 @@ module.exports = () => {
         res.json(booking);
     }
 
+    //Get next booking scheduled
     const getFirst = async (req, res) => {
         const {booking, error} = await bookings.getFirst();
         if(error){
@@ -32,6 +34,7 @@ module.exports = () => {
         res.json(booking);
     }
 
+    //Add a new booking
     const postController = async (req, res) => {   
         const {slotId, userEmail, slotPersonalId, slotDate} = req.body;       
 
@@ -44,12 +47,13 @@ module.exports = () => {
         res.status(200);
     };
 
+    //Cancel booking
     const cancelBooking = async (req, res) => {
         const bookingId = req.params.booking_id;
 
-        const Nnew_status = "cancelled";
+        const new_status = "cancelled";
 
-        //Calls the add method on the issues model
+        //Calls the add method on the bookings model
         const {result, error} = await bookings.cancelBooking(bookingId, new_status);
         if(error){
             console.log("=== cancelBooking:: Bookings Error", error);
@@ -64,6 +68,5 @@ module.exports = () => {
         getById,
         getFirst,
         cancelBooking,
-        // populatedController,
     };
 }

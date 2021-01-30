@@ -3,6 +3,7 @@ const COLLECTION = "personal_trainer";
 
 module.exports = () => { 
     
+  //Get personal trainers
     const get = async (id = null) => {
         console.log(' inside personal model');
         if(!id){
@@ -23,35 +24,16 @@ module.exports = () => {
              
     }
 
+    //Add personal trainer
     const add = async(name, email, mobile) => {
       console.log(' inside personal model add');
      
-      // const checkProject = await db.findProjectID(slug);
-      // try{
-      //     //if a project was found, return error message
-      //     if(checkProject != null){
-      //       console.log("===== Project already registered with this slug:: add ProjectModel Error");              
-      //       return null;
-           
-      //     }
-      // }catch(ex){       
-      //     return {error: ex}
-      // }
-
-      // try{
-      //   //Checks if any of the fields is null
-      //   if (!id || !name){       
-      //       console.log("===== Not all the fields have been provided:: add PersonalModel Error");   
-      //       return null;
-      //   }
-      // }catch(ex){       
-      //     return {error: ex}
-      // }       
- 
       try{
         const results = await db.add(COLLECTION, {
           id: id,
           name: name,
+          email: email,
+          mobile: mobile
          });
          return results.result;
       }catch(ex){
