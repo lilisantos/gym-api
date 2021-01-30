@@ -23,7 +23,7 @@ module.exports = () => {
              
     }
 
-    const add = async(id, name) => {
+    const add = async(name, email, mobile) => {
       console.log(' inside personal model add');
      
       // const checkProject = await db.findProjectID(slug);
@@ -59,35 +59,10 @@ module.exports = () => {
       }
     }
 
-    // const aggregateWithIssues = async(slug) => {       
-    //     //Pipeline that searches for the project with the slug provided
-    //     const LOOKUP_ISSUES_PIPELINE = [
-    //         {
-    //             $match: {
-    //                 "slug": slug,
-    //             }
-    //         },
-    //         {
-    //             $lookup: {
-    //                 from: "issues",
-    //                 localField: "_id",
-    //                 foreignField: "project",
-    //                 as: "issues",
-    //             }
-    //         },
-    //     ];
-
-    //     try {
-    //       const projects = await db.aggregate(COLLECTION, LOOKUP_ISSUES_PIPELINE);
-    //       return projects;
-    //     }catch(ex){
-    //       return {error: ex}
-    //     }        
-    // }
+    
 
     return {
         get,
         add,
-        // aggregateWithIssues,
     }
 };

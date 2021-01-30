@@ -11,5 +11,6 @@ router.get('/get', memberController.getController);
 router.post('/add', memberController.postController);
 //Get member id by email
 router.get('/getByEmail', memberController.getByEmail);
+router.get('/get/:id', memberController.getById);
 
 module.exports = router;

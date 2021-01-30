@@ -33,25 +33,7 @@ module.exports = () => {
     }
 
     const postController = async (req, res) => {   
-        // const {type, member_id, personal_id, booking_date, fee, status} = req.body;
-        const {slotId, userEmail, slotPersonalId, slotDate} = req.body;
-        // const {slotPersonalId} = req.body.slotPersonalId;
-        console.log("== API - personal: " + slotPersonalId
-        + "  - slotDate: " + slotDate + "  - userEmail: " + userEmail);
-
-        // const {slot, err} = await slots.aggregateSlotInfo(slotId);
-        // if(err){
-        //     console.log("=== getById:: slots Error");
-        //     return res.status(500).json(err);
-        // }
-        // console.log("slot: " + slot);
-        // const {member_id, }
-        
-
-        // var dateFormat = require("dateformat");
-        // var isodate = new Date().toISOString();        
-        // isodate = dateFormat(booking_date, "isoDateTime");
-        // console.log("date = " + date);
+        const {slotId, userEmail, slotPersonalId, slotDate} = req.body;       
 
         const {results, error} = await bookings.add(userEmail, slotId,  slotPersonalId, slotDate);
         if(error){           
@@ -59,6 +41,7 @@ module.exports = () => {
         }
 
         res.json(results);
+        res.status(200);
     };
 
     const cancelBooking = async (req, res) => {
@@ -74,17 +57,6 @@ module.exports = () => {
         }
         res.json(result);
     };
-
-    // const populatedController = async (req, res) => {
-    //     const {projectIssues, error} = await projects.aggregateWithIssues(req.params.slug);
-    //     if(error){
-    //         console.log("=== aggregate:: Projects Error");
-    //         return res.status(500).json(error);
-    //     }
-    //     res.json(projectIssues);
-    // };
-
-  
    
     return {
         getController,

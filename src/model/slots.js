@@ -46,7 +46,7 @@ module.exports = () => {
 
     const update = async (slotId, new_status) => {
         if(!slotId){
-            console.log("Slot id required to cancel");
+            console.log("Slot id required to update");
             return null;
         }
 
@@ -67,6 +67,7 @@ module.exports = () => {
       // Pipeline to filter the date without the time, 
       // what is passed to the next stage and matches only the slots
       // that are available and on the day selected by the user 
+      
         const PIPELINE_SLOTS_DATEONLY = [
           {
             $project: {

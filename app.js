@@ -5,15 +5,17 @@ var path = require('path');
 var cookieParser = require('cookie-parser');
 var logger = require('morgan');
 var cors = require('cors');
-
 const bodyParser = require('body-parser');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
+// Set up headers
 app.use(function(req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+  res.header("ccess-Control-Allow-Credentials", true);
+  res.header("ccess-Control-Allow-Methods", "GET, POST, PUT, DELETE");
+  res.header("Access-Control-Allow-Headers", "Content-Type, Content-Lenght, X-Requested-With, Accept, Authorization");
   next();
 });
 
@@ -26,12 +28,13 @@ var memberRouter = require('./routes/member');
 var bookingsRouter = require('./routes/bookings');
 var member_progressRouter = require('./routes/member_progress');
 var member_dietRouter = require('./routes/member_diet');
+var member_mealsRouter = require('./routes/member_meals');
 var slotsRouter = require('./routes/slots');
 var usersRouter = require('./routes/users');
+var invoiceRouter = require('./routes/invoice');
+
 
 // Login middleware
-// const users = require('./controllers/users')();
-// const usersModel = require('./models/users')();
 const { login } = require('./src/middleware/token');
 const auth = require('./src/middleware/auth');
 
@@ -59,7 +62,9 @@ app.use('/member', memberRouter);
 app.use('/bookings', bookingsRouter);
 app.use('/member_progress', member_progressRouter);
 app.use('/member_diet', member_dietRouter);
+app.use('/member_meals', member_mealsRouter);
 app.use('/slots', slotsRouter);
+app.use('/invoice', invoiceRouter);
 
 app.get("/", (req, res) => {
   res.json({

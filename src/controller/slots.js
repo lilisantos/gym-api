@@ -21,14 +21,7 @@ module.exports = () => {
             return res.status(500).json({error: ex});
         }
     }
-       
-    //     if(error){
-    //         console.log("=== getById:: Slots Error");
-    //         return res.status(500).json(error);
-    //     }
-    //     res.json(slot);
-    // }
-
+   
     const getByDate = async (req, res) => {
         const date = req.params.date;
 
@@ -60,12 +53,12 @@ module.exports = () => {
     const update = async (req, res) => {
         const slotId = req.params.slot_id;
 
-        const new_status = "booked";
+        const new_status = "unavailable";
 
         //Calls the add method on the issues model
         const {result, error} = await slots.update(slotId, new_status);
         if(error){
-            console.log("=== cancelBooking:: Slots Error", error);
+            console.log("=== update Slot:: Slots Error", error);
             return res.status(500).json(error);
         }
         res.json(result);

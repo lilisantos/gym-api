@@ -36,15 +36,23 @@ module.exports = () => {
             MongoClient.connect(uri, MONGO_OPTIONS, (err, client) => {
                 if(err){
                     console.error('====== An error occurred connecting to MongoDB: ', err);
-                }else {
+                    return reject(err);
+                }
                     const db = client.db(DB_NAME);
                     const collection = db.collection(collectionName);
                     
                     collection.find(query).toArray((err, docs) => {
+                        if (err) {
+                            console.log("  ==== get::collection.find");
+                            console.log(err);
+                            return reject(err);
+                        }
+                        
                         resolve(docs);
+                      
                         client.close();                
                     });
-                }
+                
             });            
         });
     };
@@ -116,7 +124,8 @@ module.exports = () => {
                     }
 
                     resolve(docs);
-                    client.close(err);
+                  
+                    client.close();
                 });
             });
         });

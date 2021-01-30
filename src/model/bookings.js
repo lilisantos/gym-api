@@ -49,38 +49,28 @@ module.exports = () => {
         if (!userEmail || !slotPersonalId || !slotDate){       
           console.log("===== Not all the fields have been provided:: add booking Error");   
           return null;
-      }
+        }
 
       //Get memberId
-        const memberId = await db.findMemberId(userEmail);
-     
+      const memberId = await db.findMemberId(userEmail);
 
-      //  //Get slot info (date, personalId and type)
-      //  try{
-      //   const slot = await slots.aggregateSlotInfo(slotId);
-      //   console.log("slot: " + slot);
-      //   const dateSlot = slot.date;
-      //   const personalId = slot.personal;
-
-      //   // console.log("date: " + dateSlot + "  - personal: " + personalId);
-      // }catch(ex){
-      //   console.log("deu ruim getslotinfo: " + ex);
-      //     return {error: ex}
-      // }
-
-      
+      //Update slot status to unavailable
+      const new_status = "unavailable";
+   
       try{
         const results = await db.add(COLLECTION, {
             type: "workout",
             member:  memberId,
-            personal: slotPersonalId,
+            personal: ObjectID(slotPersonalId),
             date: slotDate,
             fee: "due",
             status: "booked"
          });
+
+         //Updates status of the selected slot, so it will not be displayed on the calendar
+         const {slotUpdated, error} = await slots.update(slotId, new_status);
          return results.result;
       }catch(ex){
-        console.log("deu ruim save booking" + ex);
           return {error: ex}
       }
     };
@@ -110,36 +100,10 @@ module.exports = () => {
        
     };
 
-    // const aggregateWithIssues = async(slug) => {       
-    //     //Pipeline that searches for the project with the slug provided
-    //     const LOOKUP_ISSUES_PIPELINE = [
-    //         {
-    //             $match: {
-    //                 "slug": slug,
-    //             }
-    //         },
-    //         {
-    //             $lookup: {
-    //                 from: "issues",
-    //                 localField: "_id",
-    //                 foreignField: "project",
-    //                 as: "issues",
-    //             }
-    //         },
-    //     ];
-
-    //     try {
-    //       const projects = await db.aggregate(COLLECTION, LOOKUP_ISSUES_PIPELINE);
-    //       return projects;
-    //     }catch(ex){
-    //       return {error: ex}
-    //     }        
-    // }
 
     return {
         get,
         add,
         cancelBooking,
-        // aggregateWithIssues,
     }
 };

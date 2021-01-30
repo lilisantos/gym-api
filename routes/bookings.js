@@ -16,4 +16,5 @@ router.post('/add', bookingsController.postController);
 //Update the status of an issue 
 router.put('/:booking_id', bookingsController.cancelBooking);
 
+router.get('/get/:id', bookingsController.getById);
 module.exports = router;
